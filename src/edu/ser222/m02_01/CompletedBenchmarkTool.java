@@ -66,7 +66,7 @@ public class CompletedBenchmarkTool implements BenchmarkTool {
 
     public static void main(String args[]) {
         BenchmarkTool me = new CompletedBenchmarkTool();
-        int size = 131136;
+        int size = 8192;
 
         //NOTE: feel free to change size here. all other code must go in the
         //      methods.
@@ -177,8 +177,7 @@ public class CompletedBenchmarkTool implements BenchmarkTool {
     @Override
     public void runBenchmarks(int size) {
         Stopwatch stopwatch;
-        String format = "#.###";
-        DecimalFormat decimalFormat = new DecimalFormat(format);
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         double insert_t1, insert_t2, shell_t1, shell_t2;
         String insert_bin_b, insert_half_b, insert_randInt_b;
         String shell_bin_b, shell_half_b, shell_randInt_b;
