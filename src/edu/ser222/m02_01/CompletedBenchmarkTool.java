@@ -66,8 +66,8 @@ public class CompletedBenchmarkTool implements BenchmarkTool {
 
     public static void main(String args[]) {
         BenchmarkTool me = new CompletedBenchmarkTool();
-        int size = 8196;
-        
+        int size = 131136;
+
         //NOTE: feel free to change size here. all other code must go in the
         //      methods.
         
@@ -133,21 +133,83 @@ public class CompletedBenchmarkTool implements BenchmarkTool {
 
     @Override
     public double computeDoublingFormula(double t1, double t2) {
-        return 0;
+        double b_value;
+        b_value = Math.log(t2/t1);
+        return Math.abs(b_value);
     }
 
     @Override
     public double benchmarkInsertionSort(Integer[] small, Integer[] large) {
-        return 0;
+        Stopwatch stopwatch;
+        double b_value, t1, t2;
+
+        stopwatch = new Stopwatch();
+        insertionSort(small);
+        t1 = stopwatch.elapsedTime();
+
+        stopwatch = new Stopwatch();
+        insertionSort(large);
+        t2 = stopwatch.elapsedTime();
+
+        b_value = computeDoublingFormula(t1, t2);
+
+        return b_value;
     }
 
     @Override
     public double benchmarkShellsort(Integer[] small, Integer[] large) {
-        return 0;
+        Stopwatch stopwatch;
+        double b_value, t1, t2;
+
+        stopwatch = new Stopwatch();
+        shellsort(small);
+        t1 = stopwatch.elapsedTime();
+
+        stopwatch = new Stopwatch();
+        shellsort(large);
+        t2 = stopwatch.elapsedTime();
+
+        b_value = computeDoublingFormula(t1, t2);
+
+        return b_value;
     }
 
     @Override
     public void runBenchmarks(int size) {
+        Stopwatch stopwatch;
+        String format = "#.###";
+        DecimalFormat decimalFormat = new DecimalFormat(format);
+        double insert_t1, insert_t2, shell_t1, shell_t2;
+        String insert_bin_b, insert_half_b, insert_randInt_b;
+        String shell_bin_b, shell_half_b, shell_randInt_b;
+
+        //generate arrays of data
+        Integer bin1[] = generateTestDataBinary(size);
+        Integer bin2[] = generateTestDataBinary(size*2);
+        Integer half1[] = generateTestDataHalves(size);
+        Integer half2[] = generateTestDataHalves(size*2);
+        Integer randInt1[] = generateTestDataHalfRandom(size);
+        Integer randInt2[] = generateTestDataHalfRandom(size*2);
+
+        /*****************************************************************************
+         * CALCULATE THE EMPIRICAL B VALUES FOR EACH ARRAY TYPE USING INSERTION SORT *
+         *****************************************************************************/
+        insert_bin_b = decimalFormat.format(benchmarkInsertionSort(bin1, bin2));
+        insert_half_b = decimalFormat.format(benchmarkInsertionSort(half1, half2));
+        insert_randInt_b = decimalFormat.format(benchmarkInsertionSort(randInt1, randInt2));
+
+        /*****************************************************************************
+         *   CALCULATE THE EMPIRICAL B VALUES FOR EACH ARRAY TYPE USING SHELL SORT   *
+         *****************************************************************************/
+        shell_bin_b = decimalFormat.format(benchmarkShellsort(bin1, bin2));
+        shell_half_b = decimalFormat.format(benchmarkShellsort(half1, half2));
+        shell_randInt_b = decimalFormat.format(benchmarkShellsort(randInt1, randInt2));
+
+
+        System.out.println("\t\tInsertion\tShellsort");
+        System.out.println("   Bin\t" + insert_bin_b + "\t\t\t" + shell_bin_b);
+        System.out.println("  Half\t" + insert_half_b + "\t\t\t" + shell_half_b);
+        System.out.println("RanInt\t" + insert_randInt_b + "\t\t\t" + shell_randInt_b);
 
     }
 }
